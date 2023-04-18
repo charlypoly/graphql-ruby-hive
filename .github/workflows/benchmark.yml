@@ -23,7 +23,6 @@ jobs:
         with:
           working-directory: ./k6/graphql-api
           ruby-version: 2.6
-          bundler-cache: true
 
       - name: Start GraphQL API with hive enabled
         working-directory: ./k6/graphql-api
