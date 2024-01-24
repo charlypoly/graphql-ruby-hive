@@ -2,20 +2,35 @@ PATH
   remote: .
   specs:
     graphql-hive (0.3.3)
-      graphql (~> 2.0.9)
+      graphql (~> 2.2.5)
 
 GEM
   remote: https://rubygems.org/
   specs:
     ast (2.4.2)
+    debug (1.9.1)
+      irb (~> 1.10)
+      reline (>= 0.3.8)
     diff-lcs (1.5.0)
-    graphql (2.0.21)
+    graphql (2.2.5)
+      racc (~> 1.4)
+    io-console (0.7.2)
+    irb (1.11.1)
+      rdoc
+      reline (>= 0.4.2)
     parallel (1.22.1)
     parser (3.1.2.0)
       ast (~> 2.4.1)
+    psych (5.1.2)
+      stringio
+    racc (1.7.3)
     rainbow (3.1.1)
     rake (10.5.0)
+    rdoc (6.6.2)
+      psych (>= 4.0.0)
     regexp_parser (2.5.0)
+    reline (0.4.2)
+      io-console (~> 0.5)
     rexml (3.2.5)
     rspec (3.11.0)
       rspec-core (~> 3.11.0)
@@ -42,6 +57,7 @@ GEM
     rubocop-ast (1.18.0)
       parser (>= 3.1.1.0)
     ruby-progressbar (1.11.0)
+    stringio (3.1.0)
     unicode-display_width (2.1.0)
 
 PLATFORMS
@@ -49,6 +65,7 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 1.17)
+  debug
   graphql-hive!
   rake (~> 10.0)
   rspec (~> 3.0)
