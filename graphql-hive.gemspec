@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
     `git ls-files -z`.split("\x0").reject { |f| f.match(%r{\A(?:test|spec|features)/}) }
   end
 
-  spec.add_dependency 'graphql', '~> 2.0.9'
+  spec.add_dependency 'graphql', '~> 2'
 
   spec.add_development_dependency 'bundler', '~> 1.17'
   spec.add_development_dependency 'rake', '~> 10.0'
