@@ -4,8 +4,11 @@ require 'logger'
 require 'securerandom'
 
 require 'graphql-hive/version'
-require 'graphql-hive/usage_reporter'
 require 'graphql-hive/client'
+
+require 'graphql-hive/usage_reporter'
+require 'graphql-hive/basic_sampler'
+require 'graphql-hive/dynamic_sampler'
 
 # class MySchema < GraphQL::Schema
 #   use(
@@ -116,10 +119,8 @@ module GraphQL
           elapsed = ending - starting
           duration = (elapsed.to_f * (10**9)).to_i
 
-          # rubocop:disable Layout/LineLength
-          report_usage(timestamp, queries, results, duration) if !queries.empty? && SecureRandom.random_number <= @options[:collect_usage_sampling]
-          # rubocop:enable Layout/LineLength
-
+          report_usage(timestamp, queries, results, duration) if !queries.empty?
+          
           results
         else
           yield

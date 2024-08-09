@@ -10,11 +10,6 @@ module GraphQL
     class UsageReporter
       @@instance = nil
 
-      @queue = nil
-      @thread = nil
-      @operations_buffer = nil
-      @client = nil
-
       def self.instance
         @@instance
       end
@@ -27,6 +22,10 @@ module GraphQL
 
         @options_mutex = Mutex.new
         @queue = Queue.new
+
+        @sampler = options[:collect_usage_sampler] ? 
+          DynamicSampler.new(options[:collect_usage_sampler], options[:sample_key_generator]) : 
+          BasicSampler.new(options[:collect_usage_sampling])
 
         start_thread
       end
@@ -55,8 +54,9 @@ module GraphQL
         @thread = Thread.new do
           buffer = []
           while (operation = @queue.pop(false))
-            @options[:logger].debug("add operation to buffer: #{operation}")
-            buffer << operation
+            @options[:logger].debug("processing operation from queue: #{operation}")
+            buffer << operation if sample_operation?(operation)
+
             @options_mutex.synchronize do
               if buffer.size >= @options[:buffer_size]
                 @options[:logger].debug('buffer is full, sending!')
@@ -65,6 +65,7 @@ module GraphQL
               end
             end
           end
+
           unless buffer.empty?
             @options[:logger].debug('shuting down with buffer, sending!')
             process_operations(buffer)
@@ -77,6 +78,13 @@ module GraphQL
 
           raise e
         end
+      end
+
+      def sample_operation?(operation)
+        @sampler.sample?(operation)
+      rescue => e
+        @options[:logger].warn("All operations are sampled because sampling configuration contains an error: #{e}")
+        true
       end
 
       def process_operations(operations)
