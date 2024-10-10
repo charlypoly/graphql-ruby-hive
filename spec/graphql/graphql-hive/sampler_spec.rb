@@ -3,9 +3,9 @@
 require "spec_helper"
 
 RSpec.describe GraphQL::Hive::Sampler do
-  let(:sampler_instance) { described_class.new(sampling_options, logger) }
   let(:sampling_options) { nil }
   let(:logger) { instance_double("Logger") }
+  let(:sampler_instance) { described_class.new(sampling_options, logger) }
 
   describe "#initialize" do
     it "creates a basic sampler" do

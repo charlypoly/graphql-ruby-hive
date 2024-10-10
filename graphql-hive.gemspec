@@ -25,4 +25,5 @@ Gem::Specification.new do |spec|
   end
 
   spec.add_dependency "graphql", ">= 2.3", "< 3"
+  spec.add_dependency "faraday", "< 3"
 end

@@ -3,6 +3,9 @@
 require "bundler/setup"
 require "graphql"
 require "graphql-hive"
+require "super_diff/rspec"
+require "timecop"
+require "webmock/rspec"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

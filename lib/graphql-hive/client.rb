@@ -1,52 +1,50 @@
 # frozen_string_literal: true
 
-require "net/http"
-require "uri"
+require "faraday"
+require "json"
 
 module GraphQL
   class Hive < GraphQL::Tracing::PlatformTracing
-    # API client
     class Client
-      def initialize(options)
-        @options = options
+      USAGE_API_VERSION = "2"
+      def initialize(token:, logger:, port: "443", endpoint: "app.graphql-hive.com")
+        port = port.to_s
+        use_ssl = port == "443"
+        scheme = use_ssl ? "https" : "http"
+        url = "#{scheme}://#{endpoint}:#{port}"
+        @logger = logger
+        @connection = setup_connection(url, token, logger)
       end
 
       def send(path, body, _log_type)
-        uri =
-          URI::HTTP.build(
-            scheme: (@options[:port].to_s == "443") ? "https" : "http",
-            host: @options[:endpoint] || "app.graphql-hive.com",
-            port: @options[:port] || "443",
-            path: path
-          )
-
-        http = setup_http(uri)
-        request = build_request(uri, body)
-        response = http.request(request)
-
-        @options[:logger].debug(response.inspect)
-        @options[:logger].debug(response.body.inspect)
-      rescue => e
-        @options[:logger].fatal("Failed to send data: #{e}")
+        @connection.post(path) do |req|
+          req.body = JSON.generate(body)
+        end
+      rescue Faraday::Error => e
+        @logger.fatal("GraphQL::Hive::Client encountered an error: #{e.message}")
       end
 
-      def setup_http(uri)
-        http = ::Net::HTTP.new(uri.host, uri.port)
-        http.use_ssl = @options[:port].to_s == "443"
-        http.read_timeout = 2
-        http
+      private
+
+      def setup_connection(url, token, logger)
+        Faraday.new(
+          url: url,
+          headers: build_headers(token)
+        ) do |conn|
+          conn.request :json
+          conn.response :logger, logger, headers: false
+          conn.adapter Faraday.default_adapter
+        end
       end
 
-      def build_request(uri, body)
-        request = Net::HTTP::Post.new(uri.request_uri)
-        request["Authorization"] = @options[:token]
-        request["X-Usage-API-Version"] = "2"
-        request["content-type"] = "application/json"
-        request["User-Agent"] = "Hive@#{Graphql::Hive::VERSION}"
-        request["graphql-client-name"] = "Hive Ruby Client"
-        request["graphql-client-version"] = Graphql::Hive::VERSION
-        request.body = JSON.generate(body)
-        request
+      def build_headers(token)
+        {
+          "Authorization" => token,
+          "X-Usage-API-Version" => USAGE_API_VERSION,
+          "User-Agent" => "Hive@#{Graphql::Hive::VERSION}",
+          "graphql-client-name" => "Hive Ruby Client",
+          "graphql-client-version" => Graphql::Hive::VERSION
+        }
       end
     end
   end

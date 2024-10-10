@@ -4,7 +4,7 @@ module GraphQL
   class Hive < GraphQL::Tracing::PlatformTracing
     # Sampler instance for usage reporter
     class Sampler
-      def initialize(sampling_options, logger = nil)
+      def initialize(sampling_options, logger)
         # backwards compatibility with old `collect_usage_sampling` field
         if sampling_options.is_a?(Numeric)
           logger&.warn(

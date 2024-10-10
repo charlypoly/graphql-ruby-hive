@@ -1,0 +1,86 @@
+{
+  "size": 3,
+  "map": {
+    "c3b6d9b0": {
+      "operationName": "me",
+      "operation": "query me { me { id name } }",
+      "fields": ["Query", "Query.me", "User", "User.id", "User.name"]
+    },
+    "762a45e3": {
+      "operationName": "users",
+      "operation": "query users { users { id } }",
+      "fields": ["Query", "Query.users", "User", "User.id"]
+    },
+    "12f3712a": {
+      "operationName": "liveCoordinates",
+      "operation": "subscription liveCoordinates { location { x y } }",
+      "fields": [
+        "Subscription",
+        "Subscription.location",
+        "User",
+        "Location",
+        "Location.x",
+        "Location.y"
+      ]
+    }
+  },
+  "operations": [
+    {
+      "operationMapKey": "c3b6d9b0",
+      "timestamp": 1663158676535,
+      "execution": {
+        "ok": true,
+        "duration": 150000000,
+        "errorsTotal": 0
+      },
+      "metadata": {
+        "client": {
+          "name": "demo",
+          "version": "0.0.1"
+        }
+      }
+    },
+    {
+      "operationMapKey": "c3b6d9b0",
+      "timestamp": 1663158676589,
+      "execution": {
+        "ok": false,
+        "duration": 150000000,
+        "errorsTotal": 1
+      },
+      "metadata": {
+        "client": {
+          "name": "demo",
+          "version": "0.0.1"
+        }
+      }
+    },
+    {
+      "operationMapKey": "762a45e3",
+      "timestamp": 1663158676589,
+      "execution": {
+        "ok": true,
+        "duration": 150000000,
+        "errorsTotal": 0
+      },
+      "metadata": {
+        "client": {
+          "name": "demo",
+          "version": "0.0.1"
+        }
+      }
+    }
+  ],
+  "subscriptionOperations": [
+    {
+      "operationMapKey": "12f3712a",
+      "timestamp": 1663158676589,
+      "metadata": {
+        "client": {
+          "name": "demo",
+          "version": "0.0.1"
+        }
+      }
+    }
+  ]
+}
