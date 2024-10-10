@@ -11,14 +11,18 @@ app.get("/", (req, res) => {
 });
 
 app.get("/count", (req, res) => {
+  res.status(200).json({ count });
+});
+
+app.post("/reset", (req, res) => {
+  count = 0;
   res.status(200).send({ count });
 });
 
 app.post("/usage", (req, res) => {
-  console.log(req.body);
-  // if (req.body && req.body.operations) {
-  //   count += Object.keys(req.body.operations).length;
-  // }
+  if (req.body && req.body.operations) {
+    count += Object.keys(req.body.operations).length;
+  }
   res.status(200).send({ status: "ok " });
 });
 

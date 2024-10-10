@@ -15,33 +15,35 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'yarn'
-          cache-dependency-path: 'k6/yarn.lock'
+          cache: "yarn"
+          cache-dependency-path: "k6/yarn.lock"
 
       - name: Use Ruby
         uses: ruby/setup-ruby@2a9a743e19810b9f3c38060637daf594dbd7b37f
         with:
           working-directory: ./k6/graphql-api
-          ruby-version: '3.3'
+          ruby-version: "3.3"
           bundler-cache: true
 
       - name: Start GraphQL API with hive enabled
         working-directory: ./k6/graphql-api
         run: |
           bundle
-          bundle exec puma -t 0:1 -p 9292 &
-          npx wait-on http://localhost:9292 --timeout 5s
+          bundle exec puma -C puma.rb &
+          npx wait-on http://localhost:9291 --timeout 5s
         env:
-          HIVE_ENABLED: 'true'
+          HIVE_ENABLED: "true"
+          port: 9291
 
       - name: Start GraphQL API with hive disabled
         working-directory: ./k6/graphql-api
         run: |
           bundle
-          bundle exec puma -t 0:1 -p 9291 &
-          npx wait-on http://localhost:9291 --timeout 5s
+          bundle exec puma -C puma.rb &
+          npx wait-on http://localhost:9292 --timeout 5s
         env:
-          HIVE_ENABLED: 'false'
+          HIVE_ENABLED: "false"
+          PORT: 9292
 
       - name: Start Fake Usage API
         working-directory: ./k6/
@@ -53,8 +55,7 @@ jobs:
       - name: Install k6
         working-directory: ./k6
         env:
-          K6_RELEASE_ARTIFACT_URL:
-            https://github.com/grafana/k6/releases/download/v0.37.0/k6-v0.37.0-linux-amd64.tar.gz
+          K6_RELEASE_ARTIFACT_URL: https://github.com/grafana/k6/releases/download/v0.37.0/k6-v0.37.0-linux-amd64.tar.gz
         run: curl "${K6_RELEASE_ARTIFACT_URL}" -L | tar xvz --strip-components 1
 
       - name: Run Benchmark

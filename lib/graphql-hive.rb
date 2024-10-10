@@ -171,10 +171,10 @@ module GraphQL
         variables: {
           input: {
             sdl: sdl,
-            author: @options[:reporting][:author],
-            commit: @options[:reporting][:commit],
-            service: @options[:reporting][:service_name],
-            url: @options[:reporting][:service_url],
+            author: @options.dig(:reporting, :author),
+            commit: @options.dig(:reporting, :commit),
+            service: @options.dig(:reporting, :service_name),
+            url: @options.dig(:reporting, :service_url),
             force: true
           }
         }

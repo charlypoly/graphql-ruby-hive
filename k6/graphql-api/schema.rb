@@ -33,7 +33,8 @@ class Schema < GraphQL::Schema
     GraphQL::Hive,
     enabled: ENV["HIVE_ENABLED"] === "true",
     endpoint: "localhost",
-    debug: true,
+    debug: false,
+    buffer_size: 10,
     port: 8888,
     token: "stress-token",
     report_schema: false
