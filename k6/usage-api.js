@@ -7,7 +7,7 @@ app.use(express.json());
 let count = 0;
 
 app.get("/", (req, res) => {
-  res.status(200).send({ status: 'ok' })
+  res.status(200).send({ status: "ok" });
 });
 
 app.get("/count", (req, res) => {
@@ -15,9 +15,10 @@ app.get("/count", (req, res) => {
 });
 
 app.post("/usage", (req, res) => {
-  if (req.body && req.body.operations) {
-    count += Object.keys(req.body.operations).length;
-  }
+  console.log(req.body);
+  // if (req.body && req.body.operations) {
+  //   count += Object.keys(req.body.operations).length;
+  // }
   res.status(200).send({ status: "ok " });
 });
 
